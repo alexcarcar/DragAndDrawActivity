@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DragAndDraw</string>
+    <string name="draw_rectangles_by_dragging_your_finger">Draw rectangles by dragging your finger.</string>
 </resources>

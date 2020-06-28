@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <alex.carcar.draganddraw.BoxDrawingView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/box_drawing_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:contentDescription="@string/draw_rectangles_by_dragging_your_finger"
+    />
