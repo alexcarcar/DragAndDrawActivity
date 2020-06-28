@@ -21,8 +21,17 @@ class BoxDrawingView(context: Context, attrs: AttributeSet? = null) : View(conte
         color = 0xfff8efe0.toInt()
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        val current = PointF(event.x, event.y)
+    fun boxFling() {
+        Log.i(TAG, "fling")
+        if (boxen.size >= 2) {
+            boxen.removeAt(boxen.size-1)
+            boxen.removeAt(boxen.size-1)
+            invalidate()
+        }
+    }
+
+    fun boxOnTouchEvent(event: MotionEvent): Boolean {
+        val current = PointF(event.x, Math.max(0F, event.y-180F))
         var action = ""
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
