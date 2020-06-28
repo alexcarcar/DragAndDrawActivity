@@ -16,4 +16,8 @@ class Box(val start: PointF) {
 
     val bottom: Float
         get() = Math.max(start.y, end.y)
+
+    override fun toString(): String {
+        return "{x1:${start.x}, y1:${start.y}, x2:${end.x}, y2:${end.y}}"
+    }
 }
