@@ -13,16 +13,16 @@ import android.view.View
 import org.json.JSONArray
 import org.json.JSONObject
 
-private const val TAG = "BoxDrawingView"
+private const val TAG = "LineDrawingView"
 
-class BoxDrawingView(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
+class LineDrawingView(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
     init {
         isSaveEnabled = true
     }
 
-    private var currentBox: Box? = null
-    private val boxen = mutableListOf<Box>()
-    private val boxPaint = Paint().apply {
+    private var currentLine: Line? = null
+    private val lines = mutableListOf<Line>()
+    private val linePaint = Paint().apply {
         color = 0x22ff0000.toInt()
     }
     private val backgroundPaint = Paint().apply {
@@ -32,7 +32,7 @@ class BoxDrawingView(context: Context, attrs: AttributeSet? = null) : View(conte
     override fun onSaveInstanceState(): Parcelable? {
         val superState = super.onSaveInstanceState()
         val myState = SavedState(superState)
-        myState.json = boxen.toString()
+        myState.json = lines.toString()
         return myState
     }
 
@@ -49,9 +49,9 @@ class BoxDrawingView(context: Context, attrs: AttributeSet? = null) : View(conte
             val y2 = jsonObject.getDouble("y2").toFloat()
             val start = PointF(x1, y1)
             val end = PointF(x2, y2)
-            currentBox = Box(start).also {
+            currentLine = Line(start).also {
                 it.end = end
-                boxen.add(it)
+                lines.add(it)
             }
             i++
         }
@@ -65,30 +65,30 @@ class BoxDrawingView(context: Context, attrs: AttributeSet? = null) : View(conte
             MotionEvent.ACTION_DOWN -> {
                 action = "ACTION_DOWN"
                 // Reset drawing state
-                currentBox = Box(current).also {
-                    boxen.add(it)
+                currentLine = Line(current).also {
+                    lines.add(it)
                 }
             }
             MotionEvent.ACTION_MOVE -> {
                 action = "ACTION_MOVE"
-                updateCurrentBox(current)
+                updateCurrentLine(current)
             }
             MotionEvent.ACTION_UP -> {
                 action = "ACTION_UP"
-                updateCurrentBox(current)
-                currentBox = null
+                updateCurrentLine(current)
+                currentLine = null
             }
             MotionEvent.ACTION_CANCEL -> {
                 action = "ACTION_CANCEL"
-                currentBox = null
+                currentLine = null
             }
         }
         Log.i(TAG, "$action at x=${current.x} y=${current.y}")
         return true
     }
 
-    private fun updateCurrentBox(current: PointF) {
-        currentBox?.let {
+    private fun updateCurrentLine(current: PointF) {
+        currentLine?.let {
             it.end = current
             invalidate()
         }
@@ -97,8 +97,11 @@ class BoxDrawingView(context: Context, attrs: AttributeSet? = null) : View(conte
     override fun onDraw(canvas: Canvas) {
         // Fill the background
         canvas.drawPaint(backgroundPaint)
-        boxen.forEach { box ->
-            canvas.drawRect(box.left, box.top, box.right, box.bottom, boxPaint)
+        linePaint.strokeWidth = 10f
+        lines.forEach { l ->
+            // canvas.drawRect(l.left, l.bottom, l.right, l.top, linePaint)
+            canvas.drawLine(l.x1, l.y1, l.x2, l.y2, linePaint)
+            // canvas.drawCircle((l.x1+l.x2)/2, (l.y1+l.y2)/2, l.length/2, linePaint)
         }
     }
 }
